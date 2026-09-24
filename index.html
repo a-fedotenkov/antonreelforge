@@ -49,90 +49,101 @@
   </div>
 </section>
 
-<section class="jobs" id="jobs">
-  <p class="eyebrow">THREE SITUATIONS WE SEE</p>
-  <h2>What you came here with</h2>
+<section class="jobs ladder" id="jobs">
+  <p class="eyebrow">SEE THE LAYERS</p>
+  <h2>The same 13 seconds, one layer at a time</h2>
+  <p class="ladder-intro">
+    Same source clip in every step below. Each one keeps everything from
+    the step before it and adds exactly one thing — press play on any of
+    them, or go left to right and the whole strip runs about a minute
+    and a half.
+  </p>
 
-  <div class="job-card">
-    <div class="job-text">
-      <p class="job-tag">"I've got an hour-long podcast and no shorts."</p>
-      <h3>One long recording → three standalone clips</h3>
-      <p>
-        We watch the full recording and pull out three moments that work
-        on their own — not just the sections between silences. Each comes
-        back as a finished vertical clip: cut, captioned, ready to post.
-      </p>
-      <p class="job-meta">Output: 3 vertical clips, ~20-40s each · captions burned in · 48-hour turnaround.</p>
+  <div class="ladder-strip">
+    <div class="ladder-step landscape">
+      <div class="ladder-video">
+        <video controls preload="metadata" playsinline poster="ladder-00-raw.jpg">
+          <source src="ladder-00-raw.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="lnum">0</p>
+      <h4>Raw source</h4>
+      <p>What we started from. Horizontal, no captions, no crop, nothing added.</p>
     </div>
-    <div class="job-video">
-      <video controls preload="metadata" playsinline poster="long-recording-to-three-clips.jpg">
-        <source src="long-recording-to-three-clips.mp4" type="video/mp4">
-      </video>
+
+    <div class="ladder-step landscape">
+      <div class="ladder-video">
+        <video controls preload="metadata" playsinline poster="ladder-01-captions.jpg">
+          <source src="ladder-01-captions.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="lnum">1</p>
+      <h4>+ Captions</h4>
+      <p>Word-by-word captions burned in. Still horizontal — nothing else changed yet.</p>
+    </div>
+
+    <div class="ladder-step portrait">
+      <div class="ladder-video">
+        <video controls preload="metadata" playsinline poster="ladder-02-reframe.jpg">
+          <source src="ladder-02-reframe.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="lnum">2</p>
+      <h4>+ Reframe</h4>
+      <p>Cropped to vertical (9:16). The crop point is fixed here — tracking comes next.</p>
+    </div>
+
+    <div class="ladder-step portrait">
+      <div class="ladder-video">
+        <video controls preload="metadata" playsinline poster="ladder-03-tracking.jpg">
+          <source src="ladder-03-tracking.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="lnum">3</p>
+      <h4>+ Speaker tracking</h4>
+      <p>The crop now follows him as he moves, instead of holding one fixed spot.</p>
+    </div>
+
+    <div class="ladder-step portrait">
+      <div class="ladder-video">
+        <video controls preload="metadata" playsinline poster="ladder-04-cuts.jpg">
+          <source src="ladder-04-cuts.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="lnum">4</p>
+      <h4>+ Cuts</h4>
+      <p>A dead-air pause is trimmed out, and the frame pushes in right at the cut.</p>
+    </div>
+
+    <div class="ladder-step portrait">
+      <div class="ladder-video">
+        <video controls preload="metadata" playsinline poster="ladder-05-music.jpg">
+          <source src="ladder-05-music.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="lnum">5</p>
+      <h4>+ Music</h4>
+      <p>A background track comes in under the voice, mixed to stay under it.</p>
+    </div>
+
+    <div class="ladder-step portrait">
+      <div class="ladder-video">
+        <video controls preload="metadata" playsinline poster="ladder-06-effects.jpg">
+          <source src="ladder-06-effects.mp4" type="video/mp4">
+        </video>
+      </div>
+      <p class="lnum">6</p>
+      <h4>+ Effects</h4>
+      <p>One small icon appears in sync with a spoken word.</p>
     </div>
   </div>
 
-  <div class="job-card reverse">
-    <div class="job-text">
-      <p class="job-tag">"It's shot horizontal, I need it vertical."</p>
-      <h3>Reframe with the speaker tracked, not a static crop</h3>
-      <p>
-        The crop follows the person talking through the frame instead of
-        sitting fixed in the middle — so nobody ends up cut in half when
-        they lean or turn.
-      </p>
-      <p class="callout">This is part of every edit here, not a paid add-on
-      — some editors charge extra to reformat for vertical, ours doesn't.</p>
-      <p class="job-meta">Output: 9:16 vertical, speaker-tracked crop · captions and clean audio included.</p>
-    </div>
-    <div class="job-video">
-      <video controls preload="metadata" playsinline poster="before-after-interview.jpg">
-        <source src="before-after-interview.mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
-
-  <!--
-    Fourth job removed on request 99c (owner: no more than 3-4 shown, and this
-    one had no demo). Kept here verbatim so it can be restored in one move once
-    a stream has actually run through the pipeline — do not restore without a
-    real clip behind it.
-
-  <div class="job-card">
-    <div class="job-text">
-      <p class="job-tag">"My stream runs for hours, I need clips out daily."</p>
-      <h3>Clip by what's said, not by where the stream happens to pause</h3>
-      <p>
-        Same approach as the podcast job above, run on stream-length source
-        instead of a studio recording.
-      </p>
-      <p class="callout">No demo clip for this one yet — we haven't run a
-      stream through the pipeline. Listed honestly as work we're set up for,
-      not work we've shown.</p>
-      <p class="job-meta">Status: example in progress.</p>
-    </div>
-    <div class="job-video job-video-empty">
-      <p>Example coming</p>
-    </div>
-  </div>
-  -->
-
-  <div class="job-card reverse">
-    <div class="job-text">
-      <p class="job-tag">"There's good content in here, but it's hard to sit through."</p>
-      <h3>Cut the dead air, hold the pace, caption every word</h3>
-      <p>
-        Silences and false starts trimmed, pacing tightened, word-by-word
-        captions, audio brought to a consistent, clean level — a clip that's
-        ready to post as-is, not one you still have to sit down and fix.
-      </p>
-      <p class="job-meta">Output: trimmed vertical edit · word-level captions · normalized audio · 48-hour turnaround.</p>
-    </div>
-    <div class="job-video">
-      <video controls preload="metadata" playsinline poster="cut-dead-air.jpg">
-        <source src="cut-dead-air.mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
+  <p class="callout">
+    Step 6, said plainly: this is what "effects" means in our pipeline today
+    — a small graphic timed to a specific word, not a library of animated
+    transitions or generative visuals. We'd rather show the one thing it
+    does than promise more than that.
+  </p>
 </section>
 
 <section class="proof" id="method">
