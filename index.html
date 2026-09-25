@@ -61,108 +61,114 @@
   </p>
 
   <div class="ladder-strip">
-    <div class="ladder-step landscape">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-00-raw.jpg">
-          <source src="ladder-00-raw.mp4" type="video/mp4">
-        </video>
+    <div class="ladder-row">
+      <div class="ladder-step landscape">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-00-raw.jpg">
+            <source src="ladder-00-raw.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">0</p>
+        <h4>Raw source</h4>
+        <p>What we started from. Horizontal, no captions, no crop, nothing added.</p>
+        <p class="why">Everything below is measured against this frame — nothing here is working for attention yet.</p>
       </div>
-      <p class="lnum">0</p>
-      <h4>Raw source</h4>
-      <p>What we started from. Horizontal, no captions, no crop, nothing added.</p>
-      <p class="why">Everything below is measured against this frame — nothing here is working for attention yet.</p>
+
+      <div class="ladder-step landscape">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-01-captions.jpg">
+            <source src="ladder-01-captions.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">1</p>
+        <h4>+ Captions</h4>
+        <p>Word-by-word captions burned in. Still horizontal — nothing else changed yet.</p>
+        <p class="why">Most people watch with sound off — the caption is often the only thing that lands.</p>
+      </div>
+
+      <div class="ladder-step portrait">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-02-reframe.jpg">
+            <source src="ladder-02-reframe.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">2</p>
+        <h4>+ Reframe</h4>
+        <p>Cropped to vertical (9:16). The crop point is fixed here — tracking comes next.</p>
+        <p class="why">On a phone, horizontal means a rotate or black bars — an easy reason to swipe past.</p>
+      </div>
+
+      <div class="ladder-step portrait">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-03-tracking.jpg">
+            <source src="ladder-03-tracking.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">3</p>
+        <h4>+ Speaker tracking</h4>
+        <p>The crop now follows him as he moves, instead of holding one fixed spot.</p>
+        <p class="why">A fixed crop clips him when he moves — that reads as a mistake, not a style.</p>
+      </div>
     </div>
 
-    <div class="ladder-step landscape">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-01-captions.jpg">
-          <source src="ladder-01-captions.mp4" type="video/mp4">
-        </video>
-      </div>
-      <p class="lnum">1</p>
-      <h4>+ Captions</h4>
-      <p>Word-by-word captions burned in. Still horizontal — nothing else changed yet.</p>
-      <p class="why">Most people watch with sound off — the caption is often the only thing that lands.</p>
-    </div>
+    <div class="ladder-row-link" aria-hidden="true"></div>
 
-    <div class="ladder-step portrait">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-02-reframe.jpg">
-          <source src="ladder-02-reframe.mp4" type="video/mp4">
-        </video>
+    <div class="ladder-row">
+      <div class="ladder-step portrait">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-04-cuts.jpg">
+            <source src="ladder-04-cuts.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">4</p>
+        <h4>+ Cuts</h4>
+        <p>A dead-air pause is trimmed out — same tracked crop as step 3, just tighter timing.</p>
+        <p class="why">Every second with no new motion or word is a second the thumb is free to scroll.</p>
       </div>
-      <p class="lnum">2</p>
-      <h4>+ Reframe</h4>
-      <p>Cropped to vertical (9:16). The crop point is fixed here — tracking comes next.</p>
-      <p class="why">On a phone, horizontal means a rotate or black bars — an easy reason to swipe past.</p>
-    </div>
 
-    <div class="ladder-step portrait">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-03-tracking.jpg">
-          <source src="ladder-03-tracking.mp4" type="video/mp4">
-        </video>
+      <div class="ladder-step portrait">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-05-shot-changes.jpg">
+            <source src="ladder-05-shot-changes.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">5</p>
+        <h4>+ Shot changes</h4>
+        <p>Crop size holds as a state — one smooth push at the cut, one instant punch on the next fact, never a snap back.</p>
+        <p class="why">A framing change reads as a new beat — smooth for a thought landing, instant for a fact arriving cold.</p>
       </div>
-      <p class="lnum">3</p>
-      <h4>+ Speaker tracking</h4>
-      <p>The crop now follows him as he moves, instead of holding one fixed spot.</p>
-      <p class="why">A fixed crop clips him when he moves — that reads as a mistake, not a style.</p>
-    </div>
 
-    <div class="ladder-step portrait">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-04-cuts.jpg">
-          <source src="ladder-04-cuts.mp4" type="video/mp4">
-        </video>
+      <div class="ladder-step portrait">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-06-music.jpg">
+            <source src="ladder-06-music.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">6</p>
+        <h4>+ Music</h4>
+        <p>A background track comes in under the voice, mixed to stay under it.</p>
+        <p class="why">Silence under a talking head can feel like the clip stalled — the bed track keeps the energy up.</p>
       </div>
-      <p class="lnum">4</p>
-      <h4>+ Cuts</h4>
-      <p>A dead-air pause is trimmed out — same tracked crop as step 3, just tighter timing.</p>
-      <p class="why">Every second with no new motion or word is a second the thumb is free to scroll.</p>
-    </div>
 
-    <div class="ladder-step portrait">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-05-shot-changes.jpg">
-          <source src="ladder-05-shot-changes.mp4" type="video/mp4">
-        </video>
+      <div class="ladder-step portrait">
+        <div class="ladder-video">
+          <video controls preload="metadata" playsinline poster="ladder-07-effects.jpg">
+            <source src="ladder-07-effects.mp4" type="video/mp4">
+          </video>
+        </div>
+        <p class="lnum">7</p>
+        <h4>+ Effects</h4>
+        <p>Small icons land on key words as they're spoken — spacecraft, engineering, monitoring.</p>
+        <p class="why">Each one gives the eye a beat to land on right where the sentence gets specific, instead of reading past it.</p>
       </div>
-      <p class="lnum">5</p>
-      <h4>+ Shot changes</h4>
-      <p>Crop size holds as a state — one smooth push at the cut, one instant punch on the next fact, never a snap back.</p>
-      <p class="why">A framing change reads as a new beat — smooth for a thought landing, instant for a fact arriving cold.</p>
-    </div>
-
-    <div class="ladder-step portrait">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-06-music.jpg">
-          <source src="ladder-06-music.mp4" type="video/mp4">
-        </video>
-      </div>
-      <p class="lnum">6</p>
-      <h4>+ Music</h4>
-      <p>A background track comes in under the voice, mixed to stay under it.</p>
-      <p class="why">Silence under a talking head can feel like the clip stalled — the bed track keeps the energy up.</p>
-    </div>
-
-    <div class="ladder-step portrait">
-      <div class="ladder-video">
-        <video controls preload="metadata" playsinline poster="ladder-07-effects.jpg">
-          <source src="ladder-07-effects.mp4" type="video/mp4">
-        </video>
-      </div>
-      <p class="lnum">7</p>
-      <h4>+ Effects</h4>
-      <p>One small icon appears in sync with a spoken word.</p>
-      <p class="why">One visual beat on the key word gives the eye somewhere to land, instead of reading on.</p>
     </div>
   </div>
 
   <p class="callout">
     Step 7, said plainly: this is what "effects" means in our pipeline today
-    — a small graphic timed to a specific word, not a library of animated
-    transitions or generative visuals. We'd rather show the one thing it
-    does than promise more than that.
+    — small graphics timed to specific words, not a library of animated
+    transitions or generative visuals. We'd rather show what it actually
+    does, repeated, than promise more than that.
   </p>
 </section>
 

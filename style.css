@@ -244,51 +244,105 @@ section { padding: 8vw 6vw; }
   margin: 0 0 36px;
 }
 
-/* Задание ladder-geometry-and-layout (25.09.2026): владелец увидел рваную
-   вёрстку на широком экране — первый (landscape) шаг занимал почти всю
-   строку, следующие три (portrait) влезали в остаток, дальше перенос,
-   строки получались разной длины, справа дыра. По свободе, данной
-   владельцем на пункты 2-3 задания («можешь делать не как в моём ТЗ»):
-   одна лента ОДНОЙ высоты (карточки разной ширины по своей пропорции —
-   landscape шире, portrait уже), без переноса строк — горизонтальный
-   скролл, буквально конвейер, который листаешь вбок. Это же убирает саму
-   причину, по которой линия-коннектор ниже не могла быть прямой: раньше
-   flex-wrap решал перенос по ширине окна недетерминированно, и одна и та
-   же пара соседних карточек то стояла в ряд, то разрывалась переносом.
-   При nowrap-скролле соседние шаги ВСЕГДА физически соседние в DOM и на
-   экране — прямая линия между ними больше не может «промахнуться». */
+/* Задание ladder-geometry-and-layout (25.09.2026) put every step in one
+   nowrap row with horizontal scroll — "буквально конвейер, который листаешь
+   вбок". Владелец посмотрел выкаченную версию и отклонил ровно это:
+   «прокрутка этапов вручную, тяжело, лучше уж статично» (задание
+   ladder-static-and-content, 25.09.2026). Scroll is gone. All 8 steps sit
+   in two static rows (4 landscape/portrait steps, then 4 portrait steps) —
+   `--ladder-h` dropped from 320px to 180px specifically so row 1 (the
+   widest: two landscape cards at ~2.39:1 plus two portrait at 9:16) fits
+   inside a normal laptop window (~1200-1400px content width) without
+   forcing a scrollbar. `flex-wrap: wrap` is kept (not `nowrap`) as a safety
+   net, not the primary layout mechanism: on a narrower desktop window the
+   row itself reflows to more sub-rows instead of ever triggering
+   overflow-x — smaller previews, never a scrollbar, which is exactly what
+   the owner asked for ("превью станут мельче — это нормально"). */
 .ladder-strip {
-  --ladder-h: 320px;
+  --ladder-h: 180px;
   display: flex;
-  flex-wrap: nowrap;
+  flex-direction: column;
+  gap: 32px;
+}
+.ladder-row {
+  display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   gap: 28px 32px;
-  overflow-x: auto;
-  padding-bottom: 18px;
-  scroll-snap-type: x proximity;
 }
+/* Row 1 (steps 0-3) is unavoidably much wider than row 2 (steps 4-7, all
+   portrait) — two landscape cards at this height are already wider than
+   four portrait ones combined. Rather than fight that with mismatched
+   heights per row (which would break the "one clip = a fixed viewing size"
+   idea), both rows share the same --ladder-h and row 2 is simply narrower,
+   left-aligned under row 1's start. */
 .ladder-step {
   flex: 0 0 auto;
   position: relative;
-  scroll-snap-align: start;
+}
+/* Row-to-row connector: a short vertical drop + node under the end of row 1,
+   standing in for "the line keeps going into the next row" without trying
+   to draw a literal diagonal from step 3 to step 4 (those cards sit at very
+   different x-positions since row 2 is much narrower — a precise geometric
+   link there would be more confusing than a plain "continues below" mark). */
+.ladder-row-link {
+  width: 10px;
+  height: 32px;
+  margin: -16px 0 -16px 4px;
+  position: relative;
+}
+.ladder-row-link::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+.ladder-row-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--bg);
 }
 /* Высота видео ОДНА на всю ленту (var(--ladder-h)) — ширина у каждого шага
-   своя, по его реальной пропорции (аспект источника задаёт aspect-ratio,
-   высота фиксирована, ширина считается браузером сама). Раньше высоты
-   тоже совпадали (338px), но через фиксированную ШИРИНУ каждого типа
-   (190px/807px) — эквивалентно по итоговому размеру, но именно ширина как
-   базовая единица и давала рваные строки при переносе. Здесь перенос
-   исключён вовсе (см. .ladder-strip выше), а высота как базовая единица
-   даёт и ровный ряд, и единую точку отсчёта для линии-коннектора ниже
-   (её вертикальный центр — просто var(--ladder-h)/2, одно число на все
-   8 карточек, а не разное для landscape/portrait). */
+   своя, по его реальной пропорции (аспект источника задаёт aspect-ratio).
+
+   🔴 Правка задания ladder-static-and-content (25.09.2026): высота как
+   базовая единица (`height: var(--ladder-h); width: auto`) работала, пока
+   лента была nowrap-скроллом — там ширина каждой карточки не влияла на
+   перенос строк, потому что строк не было вообще. В статичной раскладке
+   ширина видео обязана быть тем, что РЕШАЕТ, сколько карточек влезет в
+   ряд — а с `width: auto` эту роль негласно забирал текст ПОД видео: у
+   узкой portrait-карточки (~101px по видео) подпись вроде "+ Speaker
+   tracking" не хотела сжиматься до этой ширины и раздвигала всю карточку
+   шире видео на десятки px. Умноженное на 8 карточек, это раздвигало ряд
+   1 за пределы контейнера на 1400px экране — ряд 1 (по расчёту от чистой
+   ширины видео должен был влезать в один ряд) реально переносился на 2
+   подряда СЛУЧАЙНО, в зависимости от того, чей текст оказался длиннее.
+   Починка — ширина карточки объявлена ЯВНО (`--landscape-w`/`--portrait-w`,
+   посчитаны от `--ladder-h` тем же аспектом, что раньше шёл в
+   `aspect-ratio` видео) и текст под видео WRAP'ается ВНУТРИ этой ширины,
+   а не наоборот. */
+.ladder-strip {
+  --landscape-w: calc(var(--ladder-h) * 1920 / 804);
+  --portrait-w: calc(var(--ladder-h) * 9 / 16);
+}
+.ladder-step.landscape { width: var(--landscape-w); }
+.ladder-step.portrait { width: var(--portrait-w); }
 .ladder-video {
-  height: var(--ladder-h);
-  width: auto;
+  width: 100%;
+  height: auto;
   background: #000;
   border-radius: 8px;
   overflow: hidden;
-  max-width: 100%;
 }
 .ladder-step.landscape .ladder-video { aspect-ratio: 1920 / 804; }
 .ladder-step.portrait .ladder-video { aspect-ratio: 9 / 16; }
