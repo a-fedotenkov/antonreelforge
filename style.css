@@ -244,26 +244,47 @@ section { padding: 8vw 6vw; }
   margin: 0 0 36px;
 }
 
+/* Задание ladder-geometry-and-layout (25.09.2026): владелец увидел рваную
+   вёрстку на широком экране — первый (landscape) шаг занимал почти всю
+   строку, следующие три (portrait) влезали в остаток, дальше перенос,
+   строки получались разной длины, справа дыра. По свободе, данной
+   владельцем на пункты 2-3 задания («можешь делать не как в моём ТЗ»):
+   одна лента ОДНОЙ высоты (карточки разной ширины по своей пропорции —
+   landscape шире, portrait уже), без переноса строк — горизонтальный
+   скролл, буквально конвейер, который листаешь вбок. Это же убирает саму
+   причину, по которой линия-коннектор ниже не могла быть прямой: раньше
+   flex-wrap решал перенос по ширине окна недетерминированно, и одна и та
+   же пара соседних карточек то стояла в ряд, то разрывалась переносом.
+   При nowrap-скролле соседние шаги ВСЕГДА физически соседние в DOM и на
+   экране — прямая линия между ними больше не может «промахнуться». */
 .ladder-strip {
+  --ladder-h: 320px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: flex-start;
-  gap: 28px 20px;
+  gap: 28px 32px;
+  overflow-x: auto;
+  padding-bottom: 18px;
+  scroll-snap-type: x proximity;
 }
 .ladder-step {
   flex: 0 0 auto;
+  position: relative;
+  scroll-snap-align: start;
 }
-/* Landscape and portrait steps used to share one width (190px), which put
-   a 16:9 clip at ~107px tall next to a 9:16 clip at ~338px tall — a third
-   the height, unreadable on a phone. Both widths below are sized so the
-   ROW HEIGHT matches (~338px), not the column width — a landscape clip
-   needs to be wider to read at the same size as a 9:16 clip standing next
-   to it. Landscape clips are the actual source aspect (1920:804, ~2.39:1
-   cinemascope baked into the NASA container — see build_from_plan.py
-   strip_letterbox()), not the 16:9 container: 337.78px tall * 2.38806 ≈ 807px. */
-.ladder-step.portrait { width: 190px; }
-.ladder-step.landscape { width: 807px; }
+/* Высота видео ОДНА на всю ленту (var(--ladder-h)) — ширина у каждого шага
+   своя, по его реальной пропорции (аспект источника задаёт aspect-ratio,
+   высота фиксирована, ширина считается браузером сама). Раньше высоты
+   тоже совпадали (338px), но через фиксированную ШИРИНУ каждого типа
+   (190px/807px) — эквивалентно по итоговому размеру, но именно ширина как
+   базовая единица и давала рваные строки при переносе. Здесь перенос
+   исключён вовсе (см. .ladder-strip выше), а высота как базовая единица
+   даёт и ровный ряд, и единую точку отсчёта для линии-коннектора ниже
+   (её вертикальный центр — просто var(--ladder-h)/2, одно число на все
+   8 карточек, а не разное для landscape/portrait). */
 .ladder-video {
+  height: var(--ladder-h);
+  width: auto;
   background: #000;
   border-radius: 8px;
   overflow: hidden;
@@ -301,68 +322,46 @@ section { padding: 8vw 6vw; }
 
 .ladder .callout { margin-top: 8px; max-width: 720px; }
 
-/* Conveyor line between steps (replaces the node-strip that used to sit
-   ABOVE the ladder — owner rejected that shape by name: "не полоской
-   прогресса над ними", drew instead a curve running from one clip's
-   bottom-left corner, out past the card's left edge, down alongside the
-   caption text, into the next clip from below. Implemented as a small
-   inline SVG hook on each end of the gap rather than one continuous path,
-   because .ladder-strip wraps with flex (see the wrap-vs-scroll note
-   above) so no fixed-length path can reliably reach an adjacent card that
-   might land in a different row at a different viewport width. Both
-   halves anchor to the SAME point — the video's bottom-left corner, where
-   it meets the caption — via --video-bottom, so exit and entry read as
-   one broken-but-continuous pipe rather than two unrelated ornaments.
-   Landscape and portrait steps were already sized so their video height
-   matches (~338px desktop, see the row-height comment on .ladder-step),
-   so one constant per breakpoint is enough — no per-step math needed.
-
-   Both hooks stay LEFT of the card's own left edge for nearly their whole
-   length (only the last couple of px turn in to touch the corner) —
-   first version let the entry curve's box run 8px into the card, which
-   put most of its stroke on top of the video frame itself. Some frames
-   are pale sky/monitor tones close to the accent color's own value, so
-   the curve was reading as invisible rather than as a design choice —
-   caught by screenshotting a mid-brightness frame, not by eye on the
-   first (dark) one. Keeping the stroke off the video means it reads the
-   same regardless of what's playing under it. */
-.ladder-step { position: relative; --video-bottom: 338px; }
-.ladder-step:not(:last-child)::after,
-.ladder-step:not(:first-child)::before {
+/* Линия-коннектор между шагами, версия 2 (задание ladder-geometry-and-layout,
+   25.09.2026). Версия 1 (curvy SVG hooks, см. RESULT-ladder-quality-and-chain.md)
+   владелец не принял — «линии теряются на веб-версии... скачут коряво на
+   мобильной». Обе причины устранены сменой конструкции, не только цвета:
+   1) на десктопе `.ladder-strip` теперь nowrap+скролл (см. выше) — соседние
+      карточки ВСЕГДА физически соседние, поэтому линия — просто ПРЯМОЙ
+      отрезок через зазор между ними на высоте var(--ladder-h)/2, с узлом
+      (точкой) посередине зазора. Кривые SVG были нужны только чтобы
+      перепрыгнуть перенос строки, которого больше нет;
+   2) непрозрачность поднята с 0.45 (почти совпадало с var(--line) — тем же
+      приёмом, что уже тускло смотрится у `.line-track::before` выше по
+      странице) до 0.6 сплошным `--accent`, плюс сам узел — заливка
+      `--accent` без прозрачности с кольцом `--bg` вокруг (`box-shadow`),
+      чтобы точка не сливалась с чем угодно под ней на видео позади.
+   Мобильная версия — ниже, в media query: не сегменты между карточками,
+   а ОДНА сплошная вертикальная линия вдоль левого края (в этом задании
+   уже не нужно совпадение конструкции с десктопом — то же требование
+   «непрерывности», другая реализация, обе проще версии 1). */
+.ladder-step:not(:last-child)::after {
   content: "";
   position: absolute;
-  left: 0;
-  width: 26px;
-  margin-left: -22px;
-  background-repeat: no-repeat;
-  opacity: 0.45;
+  top: calc(var(--ladder-h) / 2 - 1px);
+  left: 100%;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  opacity: 0.6;
   pointer-events: none;
 }
-/* Exit: leaves the video's bottom-left corner, sweeps left and down
-   alongside the caption text below it. Short — it only has to clear the
-   video frame, not reach the next card (the entry hook below does that
-   longer leg), so "contain" (no stretch) keeps its curve proportions. */
-.ladder-step:not(:last-child)::after {
-  top: var(--video-bottom);
-  height: 44px;
-  background-size: contain;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 44'%3E%3Cpath d='M24 2 C8 4, 3 12, 3 22 C3 30, 3 36, 3 42' fill='none' stroke='%23b5502e' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
-}
-/* Entry: runs the full height of THIS card's own video, staying in the
-   left margin the whole way down (same reasoning as above), and only
-   curves right into the frame at the very end — so it reads as arriving
-   at the video's bottom-left corner "from below" rather than dropping
-   in from the top. Reaches 40px above the card's own top edge to bridge
-   the flex gap and lap into the previous card's trailing text, so its
-   start lines up with roughly where the exit hook above leaves off.
-   background-size is 100% 100% (not "contain") because this box's
-   height changes per step (--video-bottom differs landscape/portrait/
-   breakpoint) and the curve needs to stretch to fill it, not center. */
-.ladder-step:not(:first-child)::before {
-  top: -40px;
-  height: calc(var(--video-bottom) + 40px);
-  background-size: 100% 100%;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 100' preserveAspectRatio='none'%3E%3Cpath d='M3 0 C3 55, 3 85, 3 92 C3 97, 10 100, 24 100' fill='none' stroke='%23b5502e' stroke-width='1.6' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+.ladder-step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--ladder-h) / 2 - 5px);
+  left: calc(100% + 11px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--bg);
+  pointer-events: none;
 }
 
 .proof { border-top: 1px solid var(--line); }
@@ -508,26 +507,99 @@ footer {
      so the step with its caption fits inside a ~667px viewport (iPhone SE,
      the smallest common reference) with room left over for the next
      step's edge. */
-  .ladder-strip { flex-direction: column; align-items: stretch; }
+  .ladder-strip {
+    flex-direction: column;
+    align-items: stretch;
+    overflow-x: visible;
+    padding-bottom: 0;
+    position: relative;
+    padding-left: 24px;
+  }
+  /* Desktop sizes every video to a fixed HEIGHT (var(--ladder-h), width
+     follows). A column of full-width cards needs the opposite — fixed
+     WIDTH (the step's own width), height follows from aspect-ratio — so
+     the desktop rule above is overridden back to width-driven sizing here,
+     same as before this task. */
+  .ladder-video { height: auto; width: 100%; }
   .ladder-step.landscape {
     width: 100%;
     max-width: 420px;
-    --video-bottom: 144px;
+    --video-h: 144px;
   }
   .ladder-step.portrait {
     width: 100%;
     max-width: 195px;
     margin: 0 auto;
-    --video-bottom: 347px;
+    --video-h: 347px;
   }
-  /* Stacked column: the pipe now runs top-to-bottom instead of sitting in
-     a horizontal row gap, so it needs more room to swing left and clear a
-     centered portrait card (auto side-margins, not flush with the page
-     edge) instead of the fixed 22px used at full width. */
-  .ladder-step:not(:last-child)::after,
-  .ladder-step:not(:first-child)::before {
-    margin-left: -18px;
+  /* Desktop connector (straight segment + node in the row gap) doesn't
+     apply to a single column — there IS no gap to the side, steps stack
+     top-to-bottom. Владелец прямо попросил на мобильной НЕ сегменты
+     между карточками («скачут коряво»), а ОДНА непрерывная линия вдоль
+     левого края — реализовано как один `::before` на самой `.ladder-strip`
+     (не на каждом шаге), с `top:0;bottom:0`, поэтому она физически не
+     может разорваться независимо от того, сколько текста в каждом шаге
+     (высота карточек из-за разной длины подписи не фиксирована — линия
+     не должна на это опираться). Узлы — отдельный `::before` на каждом
+     `.ladder-step`, выровнены по x с линией (см. расчёт смещения ниже),
+     по y — на вертикальном центре СВОЕГО видео (var(--video-h)/2), тот же
+     принцип, что у прямого коннектора на десктопе. */
+  .ladder-strip::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent);
+    opacity: 0.55;
   }
+  /* Desktop's node used `.ladder-step:not(:last-child)::before`
+     (specificity 0,2,1) — kill it here with the identical selector (same
+     specificity, later in the cascade wins) rather than fight it with a
+     less specific replacement that would silently lose. The new mobile
+     node below is deliberately `.ladder-strip .ladder-step::after` (an
+     extra ancestor to reach the same 0,2,1 specificity) on a DIFFERENT
+     pseudo-element (::after, not ::before) so it can't collide with the
+     rule it's not meant to touch, and it applies to EVERY step including
+     the last one (desktop's version skips the last step on purpose — a
+     row-gap connector has nothing to connect to after the final card —
+     but a left-edge rail with one node per step needs a node on all 8). */
+  .ladder-step:not(:last-child)::before { content: none; }
+  .ladder-step:not(:last-child)::after { content: none; }
+  .ladder-strip .ladder-step::after {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: calc(var(--video-h) / 2 - 5px);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--bg);
+  }
+}
+
+/* Полноэкранный режим растягивал вертикальное видео по горизонтали
+   (задание ladder-geometry-and-layout, 25.09.2026): `.job-video video` и
+   `.ladder-video video` держат `object-fit: cover` для нормального
+   вписывания В КАРТОЧКУ (тот же аспект, что у самого видео, крадиться
+   почти нечему) — но в `:fullscreen` пропорция контейнера становится
+   пропорцией ЭКРАНА (почти всегда шире, чем 9:16), и `cover` на этой
+   новой пропорции либо обрезает, либо (в зависимости от браузера)
+   съезжает к растяжению без сохранения соотношения сторон — ровно то,
+   что видел владелец. Правило ниже переопределяет именно на
+   `:fullscreen`/`::-webkit-full-screen` (Safari) — `object-fit: contain`,
+   чтобы видео вписывалось целиком (чёрные поля по бокам вместо обрезки
+   или растяжения), независимо от того, шире экран или уже самого видео. */
+.job-video video:fullscreen,
+.ladder-video video:fullscreen,
+.job-video video:-webkit-full-screen,
+.ladder-video video:-webkit-full-screen {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  background: #000;
 }
 
 .brand-accent { opacity: .62; font-weight: 400; }
