@@ -252,12 +252,20 @@ section { padding: 8vw 6vw; }
 }
 .ladder-step {
   flex: 0 0 auto;
-  width: 190px;
 }
+/* Landscape (16:9) and portrait (9:16) steps used to share one width
+   (190px), which put a 16:9 clip at ~107px tall next to a 9:16 clip at
+   ~338px tall — a third the height, unreadable on a phone. Both widths
+   below are sized so the ROW HEIGHT matches (~338px), not the column
+   width — a 16:9 clip needs to be wider to read at the same size as a
+   9:16 clip standing next to it. */
+.ladder-step.portrait { width: 190px; }
+.ladder-step.landscape { width: 600px; }
 .ladder-video {
   background: #000;
   border-radius: 8px;
   overflow: hidden;
+  max-width: 100%;
 }
 .ladder-step.landscape .ladder-video { aspect-ratio: 16 / 9; }
 .ladder-step.portrait .ladder-video { aspect-ratio: 9 / 16; }
@@ -409,6 +417,16 @@ footer {
   .line-track { min-width: 480px; }
   header { flex-direction: column; align-items: flex-start; gap: 12px; }
   nav { gap: 18px; flex-wrap: wrap; }
+  /* Below 760px the row-height match above still leaves the 16:9 steps
+     narrower than the screen is wide but shorter than a thumb wants to
+     read — single column, full-width previews for every step instead,
+     landscape and portrait alike. */
+  .ladder-strip { flex-direction: column; align-items: stretch; }
+  .ladder-step.portrait,
+  .ladder-step.landscape {
+    width: 100%;
+    max-width: 420px;
+  }
 }
 
 .brand-accent { opacity: .62; font-weight: 400; }
