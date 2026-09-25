@@ -301,59 +301,69 @@ section { padding: 8vw 6vw; }
 
 .ladder .callout { margin-top: 8px; max-width: 720px; }
 
-/* Conveyor strip above the ladder — same node-and-line idea as the
-   pipeline overview near the top of the page (.line), scoped to this
-   section so its 8 nodes can name the actual ladder steps instead of the
-   generic 6-stage funnel. Decorative (aria-hidden): the point is showing
-   one accumulating strip, not another set of links. */
-.ladder-conveyor {
-  margin: 0 0 32px;
-  overflow-x: auto;
-}
-.ladder-conveyor-track {
-  display: flex;
-  align-items: flex-start;
-  gap: 4px;
-  min-width: 720px;
-  position: relative;
-}
-.ladder-conveyor-track::before {
+/* Conveyor line between steps (replaces the node-strip that used to sit
+   ABOVE the ladder — owner rejected that shape by name: "не полоской
+   прогресса над ними", drew instead a curve running from one clip's
+   bottom-left corner, out past the card's left edge, down alongside the
+   caption text, into the next clip from below. Implemented as a small
+   inline SVG hook on each end of the gap rather than one continuous path,
+   because .ladder-strip wraps with flex (see the wrap-vs-scroll note
+   above) so no fixed-length path can reliably reach an adjacent card that
+   might land in a different row at a different viewport width. Both
+   halves anchor to the SAME point — the video's bottom-left corner, where
+   it meets the caption — via --video-bottom, so exit and entry read as
+   one broken-but-continuous pipe rather than two unrelated ornaments.
+   Landscape and portrait steps were already sized so their video height
+   matches (~338px desktop, see the row-height comment on .ladder-step),
+   so one constant per breakpoint is enough — no per-step math needed.
+
+   Both hooks stay LEFT of the card's own left edge for nearly their whole
+   length (only the last couple of px turn in to touch the corner) —
+   first version let the entry curve's box run 8px into the card, which
+   put most of its stroke on top of the video frame itself. Some frames
+   are pale sky/monitor tones close to the accent color's own value, so
+   the curve was reading as invisible rather than as a design choice —
+   caught by screenshotting a mid-brightness frame, not by eye on the
+   first (dark) one. Keeping the stroke off the video means it reads the
+   same regardless of what's playing under it. */
+.ladder-step { position: relative; --video-bottom: 338px; }
+.ladder-step:not(:last-child)::after,
+.ladder-step:not(:first-child)::before {
   content: "";
   position: absolute;
-  top: 5px;
-  left: 5px;
-  right: 5px;
-  height: 1px;
-  background: var(--line);
+  left: 0;
+  width: 26px;
+  margin-left: -22px;
+  background-repeat: no-repeat;
+  opacity: 0.45;
+  pointer-events: none;
 }
-.lc-node {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  position: relative;
+/* Exit: leaves the video's bottom-left corner, sweeps left and down
+   alongside the caption text below it. Short — it only has to clear the
+   video frame, not reach the next card (the entry hook below does that
+   longer leg), so "contain" (no stretch) keeps its curve proportions. */
+.ladder-step:not(:last-child)::after {
+  top: var(--video-bottom);
+  height: 44px;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 44'%3E%3Cpath d='M24 2 C8 4, 3 12, 3 22 C3 30, 3 36, 3 42' fill='none' stroke='%23b5502e' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
 }
-.lc-node:first-child { align-items: flex-start; }
-.lc-node:last-child { align-items: flex-end; }
-.lc-dot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 1.5px solid var(--ink-soft);
-  flex-shrink: 0;
+/* Entry: runs the full height of THIS card's own video, staying in the
+   left margin the whole way down (same reasoning as above), and only
+   curves right into the frame at the very end — so it reads as arriving
+   at the video's bottom-left corner "from below" rather than dropping
+   in from the top. Reaches 40px above the card's own top edge to bridge
+   the flex gap and lap into the previous card's trailing text, so its
+   start lines up with roughly where the exit hook above leaves off.
+   background-size is 100% 100% (not "contain") because this box's
+   height changes per step (--video-bottom differs landscape/portrait/
+   breakpoint) and the curve needs to stretch to fill it, not center. */
+.ladder-step:not(:first-child)::before {
+  top: -40px;
+  height: calc(var(--video-bottom) + 40px);
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 100' preserveAspectRatio='none'%3E%3Cpath d='M3 0 C3 55, 3 85, 3 92 C3 97, 10 100, 24 100' fill='none' stroke='%23b5502e' stroke-width='1.6' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
 }
-.lc-node-end .lc-dot { border-color: var(--accent); background: var(--accent); }
-.lc-label {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  white-space: nowrap;
-}
-.lc-node-end .lc-label { color: var(--ink); font-weight: 600; }
 
 .proof { border-top: 1px solid var(--line); }
 .proof-copy {
@@ -484,30 +494,6 @@ footer {
   .line-track { min-width: 480px; }
   header { flex-direction: column; align-items: flex-start; gap: 12px; }
   nav { gap: 18px; flex-wrap: wrap; }
-  /* Conveyor above the ladder: horizontal with 8 nodes doesn't fit a
-     ~390px screen without a min-width scroll strip that hides half the
-     labels — turn it vertical instead, line running down the left edge. */
-  .ladder-conveyor-track {
-    flex-direction: column;
-    min-width: 0;
-    gap: 10px;
-    padding-left: 4px;
-  }
-  .ladder-conveyor-track::before {
-    top: 5px;
-    bottom: 5px;
-    left: 5px;
-    right: auto;
-    width: 1px;
-    height: auto;
-  }
-  .lc-node,
-  .lc-node:first-child,
-  .lc-node:last-child {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-  }
   /* Below 760px the row-height match above still leaves the landscape steps
      narrower than the screen is wide but shorter than a thumb wants to
      read — single column, full-width previews for every step instead,
@@ -526,11 +512,21 @@ footer {
   .ladder-step.landscape {
     width: 100%;
     max-width: 420px;
+    --video-bottom: 144px;
   }
   .ladder-step.portrait {
     width: 100%;
     max-width: 195px;
     margin: 0 auto;
+    --video-bottom: 347px;
+  }
+  /* Stacked column: the pipe now runs top-to-bottom instead of sitting in
+     a horizontal row gap, so it needs more room to swing left and clear a
+     centered portrait card (auto side-margins, not flush with the page
+     edge) instead of the fixed 22px used at full width. */
+  .ladder-step:not(:last-child)::after,
+  .ladder-step:not(:first-child)::before {
+    margin-left: -18px;
   }
 }
 
