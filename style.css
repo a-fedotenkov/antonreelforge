@@ -249,42 +249,52 @@ section { padding: 8vw 6vw; }
    вбок". Владелец посмотрел выкаченную версию и отклонил ровно это:
    «прокрутка этапов вручную, тяжело, лучше уж статично» (задание
    ladder-static-and-content, 25.09.2026). Scroll is gone. All 8 steps sit
-   in two static rows (4 landscape/portrait steps, then 4 portrait steps) —
-   `--ladder-h` dropped from 320px to 180px specifically so row 1 (the
-   widest: two landscape cards at ~2.39:1 plus two portrait at 9:16) fits
-   inside a normal laptop window (~1200-1400px content width) without
-   forcing a scrollbar. `flex-wrap: wrap` is kept (not `nowrap`) as a safety
-   net, not the primary layout mechanism: on a narrower desktop window the
-   row itself reflows to more sub-rows instead of ever triggering
-   overflow-x — smaller previews, never a scrollbar, which is exactly what
-   the owner asked for ("превью станут мельче — это нормально"). */
+   in two static rows.
+
+   🔴 Задание ladder-content-and-grid (25.09.2026) заменило раскладку строки
+   ЕЩЁ РАЗ — прошлая версия держала карточки одной ВЫСОТОЙ (var(--ladder-h))
+   и давала ширину по аспекту, из-за чего колонки получались разной ширины
+   (portrait-карточка ~101px, landscape ~430px) — на широком экране текст под
+   узкими карточками рвался по 3-4 слова в строку («A fixed crop clips him
+   when he moves — that reads as a mistake, not a style» в колонку шириной
+   с палец), владелец увидел это на скриншоте: «вёрстка на веб-версии всё
+   ещё беда». Починка меняет, ЧТО фиксировано: теперь фиксирована ШИРИНА
+   колонки (равная у всех 8 шагов, `grid-template-columns: repeat(4, 1fr)`),
+   а видео вписывается в неё своей пропорцией — горизонтальные ролики выходят
+   низкими, вертикальные высокими, ровно как попросил владелец. */
 .ladder-strip {
-  --ladder-h: 180px;
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
+/* `.ladder-row` — грид на 4 равные колонки. `.ladder-step` переведён в
+   `display: contents`: его дети (видео + 4 строки подписи) становятся
+   ПРЯМЫМИ элементами этого грида, каждый в своём grid-row — так у ВСЕХ 8
+   шагов видео стоит в ряду 1, номер шага в ряду 2, заголовок в ряду 3,
+   первая строка подписи в ряду 4, вторая (`why`) в ряду 5. Высота каждого
+   ряда — по самому высокому элементу этого ряда среди 4 колонок: для ряда 1
+   это portrait-видео (высокое), поэтому landscape-видео в том же ряду 1
+   короче и `align-self: end` прижимает его к общему нижнему краю — тем
+   самым низ ЛЮБОГО видео в строке лежит на одной линии, и подписи (ряды
+   2-5) у всех четырёх карточек стартуют с одного y — то самое требование
+   владельца «выровняй превью по нижнему краю, чтобы подписи начинались на
+   одной линии». */
 .ladder-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 28px 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto auto auto auto;
+  column-gap: 24px;
+  row-gap: 0;
 }
-/* Row 1 (steps 0-3) is unavoidably much wider than row 2 (steps 4-7, all
-   portrait) — two landscape cards at this height are already wider than
-   four portrait ones combined. Rather than fight that with mismatched
-   heights per row (which would break the "one clip = a fixed viewing size"
-   idea), both rows share the same --ladder-h and row 2 is simply narrower,
-   left-aligned under row 1's start. */
-.ladder-step {
-  flex: 0 0 auto;
-  position: relative;
-}
+.ladder-step { display: contents; }
+.ladder-step > .ladder-video { grid-row: 1; align-self: end; }
+.ladder-step > .lnum { grid-row: 2; }
+.ladder-step > h4 { grid-row: 3; }
+.ladder-step > p:not(.lnum):not(.why) { grid-row: 4; }
+.ladder-step > p.why { grid-row: 5; }
 /* Row-to-row connector: a short vertical drop + node under the end of row 1,
    standing in for "the line keeps going into the next row" without trying
-   to draw a literal diagonal from step 3 to step 4 (those cards sit at very
-   different x-positions since row 2 is much narrower — a precise geometric
-   link there would be more confusing than a plain "continues below" mark). */
+   to draw a literal diagonal from step 3 to step 4. */
 .ladder-row-link {
   width: 10px;
   height: 32px;
@@ -312,37 +322,12 @@ section { padding: 8vw 6vw; }
   background: var(--accent);
   box-shadow: 0 0 0 3px var(--bg);
 }
-/* Высота видео ОДНА на всю ленту (var(--ladder-h)) — ширина у каждого шага
-   своя, по его реальной пропорции (аспект источника задаёт aspect-ratio).
-
-   🔴 Правка задания ladder-static-and-content (25.09.2026): высота как
-   базовая единица (`height: var(--ladder-h); width: auto`) работала, пока
-   лента была nowrap-скроллом — там ширина каждой карточки не влияла на
-   перенос строк, потому что строк не было вообще. В статичной раскладке
-   ширина видео обязана быть тем, что РЕШАЕТ, сколько карточек влезет в
-   ряд — а с `width: auto` эту роль негласно забирал текст ПОД видео: у
-   узкой portrait-карточки (~101px по видео) подпись вроде "+ Speaker
-   tracking" не хотела сжиматься до этой ширины и раздвигала всю карточку
-   шире видео на десятки px. Умноженное на 8 карточек, это раздвигало ряд
-   1 за пределы контейнера на 1400px экране — ряд 1 (по расчёту от чистой
-   ширины видео должен был влезать в один ряд) реально переносился на 2
-   подряда СЛУЧАЙНО, в зависимости от того, чей текст оказался длиннее.
-   Починка — ширина карточки объявлена ЯВНО (`--landscape-w`/`--portrait-w`,
-   посчитаны от `--ladder-h` тем же аспектом, что раньше шёл в
-   `aspect-ratio` видео) и текст под видео WRAP'ается ВНУТРИ этой ширины,
-   а не наоборот. */
-.ladder-strip {
-  --landscape-w: calc(var(--ladder-h) * 1920 / 804);
-  --portrait-w: calc(var(--ladder-h) * 9 / 16);
-}
-.ladder-step.landscape { width: var(--landscape-w); }
-.ladder-step.portrait { width: var(--portrait-w); }
 .ladder-video {
   width: 100%;
-  height: auto;
   background: #000;
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
 }
 .ladder-step.landscape .ladder-video { aspect-ratio: 1920 / 804; }
 .ladder-step.portrait .ladder-video { aspect-ratio: 9 / 16; }
@@ -376,39 +361,34 @@ section { padding: 8vw 6vw; }
 
 .ladder .callout { margin-top: 8px; max-width: 720px; }
 
-/* Линия-коннектор между шагами, версия 2 (задание ladder-geometry-and-layout,
-   25.09.2026). Версия 1 (curvy SVG hooks, см. RESULT-ladder-quality-and-chain.md)
-   владелец не принял — «линии теряются на веб-версии... скачут коряво на
-   мобильной». Обе причины устранены сменой конструкции, не только цвета:
-   1) на десктопе `.ladder-strip` теперь nowrap+скролл (см. выше) — соседние
-      карточки ВСЕГДА физически соседние, поэтому линия — просто ПРЯМОЙ
-      отрезок через зазор между ними на высоте var(--ladder-h)/2, с узлом
-      (точкой) посередине зазора. Кривые SVG были нужны только чтобы
-      перепрыгнуть перенос строки, которого больше нет;
-   2) непрозрачность поднята с 0.45 (почти совпадало с var(--line) — тем же
-      приёмом, что уже тускло смотрится у `.line-track::before` выше по
-      странице) до 0.6 сплошным `--accent`, плюс сам узел — заливка
-      `--accent` без прозрачности с кольцом `--bg` вокруг (`box-shadow`),
-      чтобы точка не сливалась с чем угодно под ней на видео позади.
-   Мобильная версия — ниже, в media query: не сегменты между карточками,
-   а ОДНА сплошная вертикальная линия вдоль левого края (в этом задании
-   уже не нужно совпадение конструкции с десктопом — то же требование
-   «непрерывности», другая реализация, обе проще версии 1). */
-.ladder-step:not(:last-child)::after {
+/* Линия-коннектор между шагами внутри ряда, версия 3 (задание
+   ladder-content-and-grid, 25.09.2026). Версии 1-2 висели на
+   `.ladder-step::after/::before` по центру ФИКСИРОВАННОЙ высоты карточки
+   (`var(--ladder-h)/2`) — этой высоты больше нет (шаг 4 стал `display:
+   contents`, псевдоэлементы на нём не рендерятся ни в одном браузере), а
+   середина видео теперь у каждой карточки в ряду РАЗНАЯ (portrait высокое,
+   landscape низкое). Новый якорь — САМ `.ladder-video`, `bottom: 0`: так как
+   `align-self: end` кладёт низ любого видео в ряду на одну линию (см. выше),
+   `bottom: 0` относительно `.ladder-video` — это одна и та же линия у всех
+   4 карточек ряда без вычислений. Последняя карточка ряда — маркер
+   `.ladder-step--row-end` в разметке (не CSS-селектор по позиции: `display:
+   contents` рвёт `:last-child`/`:nth-child` относительно грида ряда, они
+   продолжают считаться от родителя `.ladder-step`, а не от `.ladder-row`). */
+.ladder-step:not(.ladder-step--row-end) > .ladder-video::after {
   content: "";
   position: absolute;
-  top: calc(var(--ladder-h) / 2 - 1px);
+  bottom: 0;
   left: 100%;
-  width: 32px;
+  width: 24px;
   height: 2px;
   background: var(--accent);
   opacity: 0.6;
   pointer-events: none;
 }
-.ladder-step:not(:last-child)::before {
+.ladder-step:not(.ladder-step--row-end) > .ladder-video::before {
   content: "";
   position: absolute;
-  top: calc(var(--ladder-h) / 2 - 5px);
+  bottom: -4px;
   left: calc(100% + 11px);
   width: 10px;
   height: 10px;
@@ -416,6 +396,7 @@ section { padding: 8vw 6vw; }
   background: var(--accent);
   box-shadow: 0 0 0 3px var(--bg);
   pointer-events: none;
+  z-index: 1;
 }
 
 .proof { border-top: 1px solid var(--line); }
@@ -569,11 +550,16 @@ footer {
     position: relative;
     padding-left: 24px;
   }
-  /* Desktop sizes every video to a fixed HEIGHT (var(--ladder-h), width
-     follows). A column of full-width cards needs the opposite — fixed
-     WIDTH (the step's own width), height follows from aspect-ratio — so
-     the desktop rule above is overridden back to width-driven sizing here,
-     same as before this task. */
+  /* Desktop (ladder-content-and-grid, 25.09.2026) lays every step out as a
+     4-column grid with `.ladder-row`/`.ladder-step` both flattened via
+     `display: contents`. A single mobile column needs the opposite — real
+     boxes that simply stack top to bottom — so both are reset to normal
+     flow here: `.ladder-row` becomes invisible (its 4 `.ladder-step`
+     children join `.ladder-strip`'s flex column directly, same as if there
+     were no row wrapper at all) and `.ladder-step` goes back to being a
+     rendered block so its own width/connector rules below apply. */
+  .ladder-row { display: contents; }
+  .ladder-step { display: block; }
   .ladder-video { height: auto; width: 100%; }
   .ladder-step.landscape {
     width: 100%;
@@ -619,8 +605,8 @@ footer {
      the last one (desktop's version skips the last step on purpose — a
      row-gap connector has nothing to connect to after the final card —
      but a left-edge rail with one node per step needs a node on all 8). */
-  .ladder-step:not(:last-child)::before { content: none; }
-  .ladder-step:not(:last-child)::after { content: none; }
+  .ladder-step:not(.ladder-step--row-end) > .ladder-video::before { content: none; }
+  .ladder-step:not(.ladder-step--row-end) > .ladder-video::after { content: none; }
   .ladder-strip .ladder-step::after {
     content: "";
     position: absolute;
