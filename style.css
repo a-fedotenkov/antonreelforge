@@ -253,21 +253,23 @@ section { padding: 8vw 6vw; }
 .ladder-step {
   flex: 0 0 auto;
 }
-/* Landscape (16:9) and portrait (9:16) steps used to share one width
-   (190px), which put a 16:9 clip at ~107px tall next to a 9:16 clip at
-   ~338px tall — a third the height, unreadable on a phone. Both widths
-   below are sized so the ROW HEIGHT matches (~338px), not the column
-   width — a 16:9 clip needs to be wider to read at the same size as a
-   9:16 clip standing next to it. */
+/* Landscape and portrait steps used to share one width (190px), which put
+   a 16:9 clip at ~107px tall next to a 9:16 clip at ~338px tall — a third
+   the height, unreadable on a phone. Both widths below are sized so the
+   ROW HEIGHT matches (~338px), not the column width — a landscape clip
+   needs to be wider to read at the same size as a 9:16 clip standing next
+   to it. Landscape clips are the actual source aspect (1920:804, ~2.39:1
+   cinemascope baked into the NASA container — see build_from_plan.py
+   strip_letterbox()), not the 16:9 container: 337.78px tall * 2.38806 ≈ 807px. */
 .ladder-step.portrait { width: 190px; }
-.ladder-step.landscape { width: 600px; }
+.ladder-step.landscape { width: 807px; }
 .ladder-video {
   background: #000;
   border-radius: 8px;
   overflow: hidden;
   max-width: 100%;
 }
-.ladder-step.landscape .ladder-video { aspect-ratio: 16 / 9; }
+.ladder-step.landscape .ladder-video { aspect-ratio: 1920 / 804; }
 .ladder-step.portrait .ladder-video { aspect-ratio: 9 / 16; }
 .ladder-video video {
   width: 100%;
@@ -285,8 +287,73 @@ section { padding: 8vw 6vw; }
 }
 .ladder-step h4 { margin: 0 0 6px; font-size: 15px; letter-spacing: -0.005em; }
 .ladder-step p:not(.lnum) { margin: 0; color: var(--ink-soft); font-size: 12.5px; line-height: 1.45; }
+/* Second line per step: what the layer above is doing for the person
+   watching, not what it technically is (that's the first <p>). Set apart
+   with a thin accent rule so it doesn't read as more of the same sentence. */
+.ladder-step p.why {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-style: italic;
+  color: var(--ink);
+  opacity: 0.82;
+}
 
 .ladder .callout { margin-top: 8px; max-width: 720px; }
+
+/* Conveyor strip above the ladder — same node-and-line idea as the
+   pipeline overview near the top of the page (.line), scoped to this
+   section so its 8 nodes can name the actual ladder steps instead of the
+   generic 6-stage funnel. Decorative (aria-hidden): the point is showing
+   one accumulating strip, not another set of links. */
+.ladder-conveyor {
+  margin: 0 0 32px;
+  overflow-x: auto;
+}
+.ladder-conveyor-track {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 720px;
+  position: relative;
+}
+.ladder-conveyor-track::before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  height: 1px;
+  background: var(--line);
+}
+.lc-node {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.lc-node:first-child { align-items: flex-start; }
+.lc-node:last-child { align-items: flex-end; }
+.lc-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid var(--ink-soft);
+  flex-shrink: 0;
+}
+.lc-node-end .lc-dot { border-color: var(--accent); background: var(--accent); }
+.lc-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.lc-node-end .lc-label { color: var(--ink); font-weight: 600; }
 
 .proof { border-top: 1px solid var(--line); }
 .proof-copy {
@@ -417,15 +484,53 @@ footer {
   .line-track { min-width: 480px; }
   header { flex-direction: column; align-items: flex-start; gap: 12px; }
   nav { gap: 18px; flex-wrap: wrap; }
-  /* Below 760px the row-height match above still leaves the 16:9 steps
+  /* Conveyor above the ladder: horizontal with 8 nodes doesn't fit a
+     ~390px screen without a min-width scroll strip that hides half the
+     labels — turn it vertical instead, line running down the left edge. */
+  .ladder-conveyor-track {
+    flex-direction: column;
+    min-width: 0;
+    gap: 10px;
+    padding-left: 4px;
+  }
+  .ladder-conveyor-track::before {
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+  .lc-node,
+  .lc-node:first-child,
+  .lc-node:last-child {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+  /* Below 760px the row-height match above still leaves the landscape steps
      narrower than the screen is wide but shorter than a thumb wants to
      read — single column, full-width previews for every step instead,
-     landscape and portrait alike. */
+     landscape and portrait alike. Landscape is now ~2.39:1 (real source
+     aspect, see .ladder-step.landscape above) so at full container width
+     it's already short (~145px tall) and needs no extra cap. Portrait at
+     the same full width would be 343 * 16/9 ≈ 610px of video alone — on a
+     ~390px-wide phone that's most of the screen for ONE step, which is
+     the "have to scroll forever, can't compare neighbours" complaint from
+     the owner. Capped at 195px wide (≈347px video + ~185px caption incl.
+     the why-line ≈ 530-570px total step height, measured with Playwright)
+     so the step with its caption fits inside a ~667px viewport (iPhone SE,
+     the smallest common reference) with room left over for the next
+     step's edge. */
   .ladder-strip { flex-direction: column; align-items: stretch; }
-  .ladder-step.portrait,
   .ladder-step.landscape {
     width: 100%;
     max-width: 420px;
+  }
+  .ladder-step.portrait {
+    width: 100%;
+    max-width: 195px;
+    margin: 0 auto;
   }
 }
 
