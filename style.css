@@ -329,7 +329,7 @@ section { padding: 8vw 6vw; }
   overflow: hidden;
   position: relative;
 }
-.ladder-step.landscape .ladder-video { aspect-ratio: 1920 / 804; }
+.ladder-step.landscape .ladder-video { aspect-ratio: 16 / 9; }
 .ladder-step.portrait .ladder-video { aspect-ratio: 9 / 16; }
 .ladder-video video {
   width: 100%;
@@ -360,6 +360,15 @@ section { padding: 8vw 6vw; }
 }
 
 .ladder .callout { margin-top: 8px; max-width: 720px; }
+
+.attribution {
+  margin-top: 18px;
+  max-width: 720px;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  opacity: 0.75;
+}
+.attribution a { color: inherit; }
 
 /* Линия-коннектор между шагами внутри ряда, версия 3 (задание
    ladder-content-and-grid, 25.09.2026). Версии 1-2 висели на
