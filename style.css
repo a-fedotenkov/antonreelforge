@@ -281,11 +281,19 @@ section { padding: 8vw 6vw; }
    одной линии». */
 .ladder-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto auto auto auto auto;
   column-gap: 24px;
   row-gap: 0;
 }
+/* Задание ladder-fake-shots (27.09.2026): шаги 0-1 (нативно 16:9, вдвое ниже
+   любого 9:16-соседа) больше не сидят в одном гриде с портретными шагами —
+   раньше `align-self: end` прижимал их видео к нижнему краю строки, чья
+   высоту диктовал portrait-сосед, и наверху оставалась пустая дыра (именно
+   на это владелец указал: «плохо на странице расположены»). Теперь это
+   отдельный верхний блок на 2 колонки, обе landscape — переход 16:9 -> 9:16
+   происходит между блоками, а не внутри одной строки грида. */
+.ladder-top-row { grid-template-columns: repeat(2, 1fr); }
 .ladder-step { display: contents; }
 .ladder-step > .ladder-video { grid-row: 1; align-self: end; }
 .ladder-step > .lnum { grid-row: 2; }
