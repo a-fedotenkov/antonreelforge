@@ -164,6 +164,48 @@ section { padding: 8vw 6vw; }
 }
 .line-node-end .line-label { color: var(--ink); font-weight: 600; }
 
+/* -1 · The read — wide block above the ladder, deliberately outside the
+   step grid (task 182: the work behind step 0 is the most valuable part
+   of the line and was invisible before this). Video is a generated
+   animation, not footage — scripts/step_minus_one.py. */
+.read-block {
+  border-top: 1px solid var(--line);
+  padding-top: 6vw;
+  padding-bottom: 3vw;
+}
+.read-video {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.read-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+.read-lnum {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  margin: 22px 0 8px;
+}
+.read-caption {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
 .jobs { border-top: 1px solid var(--line); }
 .jobs h2, .proof h2 {
   font-size: clamp(26px, 3.6vw, 38px);
