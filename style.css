@@ -253,7 +253,7 @@ section { padding: 8vw 6vw; }
 
 .job-video {
   aspect-ratio: 9 / 16;
-  max-height: 60vh;
+  max-height: 440px;
   background: #000;
   border-radius: 6px;
   overflow: hidden;
