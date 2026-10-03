@@ -537,20 +537,15 @@ section { padding: 8vw 6vw; }
 }
 .author-photo-slot {
   aspect-ratio: 3 / 4;
-  border: 1px dashed var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid var(--line);
   border-radius: 6px;
+  overflow: hidden;
 }
-.author-photo-slot span {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--ink-soft);
-  text-transform: uppercase;
-  text-align: center;
-  padding: 0 10px;
+.author-photo-slot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .author-text h2 { margin: 0 0 16px; font-size: clamp(26px, 3.2vw, 32px); letter-spacing: -0.01em; }
 .author-text p { margin: 0 0 14px; color: var(--ink-soft); font-size: 15.5px; max-width: 620px; }
