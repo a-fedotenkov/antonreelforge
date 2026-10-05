@@ -713,4 +713,20 @@ footer {
   background: #000;
 }
 
+.legal { max-width: 680px; }
+.legal h1 {
+  font-size: clamp(28px, 4.2vw, 38px);
+  line-height: 1.15;
+  margin: 0 0 22px;
+  letter-spacing: -0.02em;
+}
+.legal-block { margin: 0 0 20px; max-width: 640px; }
+.legal-block h3 { margin: 0 0 10px; font-size: 17px; letter-spacing: -0.01em; }
+.legal-block p { margin: 0 0 10px; color: var(--ink-soft); font-size: 15px; }
+.legal-block p:last-child { margin-bottom: 0; }
+.legal-block a { color: var(--accent); }
+
+footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+footer a { color: var(--ink-soft); }
+
 .brand-accent { opacity: .62; font-weight: 400; }
