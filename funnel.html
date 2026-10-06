@@ -163,9 +163,21 @@ function render(d){
     <div class="k">могу отправить сама</div>
     <div class="n">в тексте заявки есть почта — Reddit не нужен</div>`));
   sp0.append(el('div', 'mini', `<div class="v" style="color:var(--warn)">${fmt(q.needs_reddit)}</div>
-    <div class="k">ждут сессию Reddit</div>
-    <div class="n">ответ только в личку или комментарием под постом</div>`));
-  work.append(sp0);
+    <div class="k">только через личку Reddit</div>
+    <div class="n">в тексте нет ни почты, ни формы</div>`));
+  /* 🔴 06.10: рядом с прогнозом «ждём столько живых» встал ФАКТ проверки.
+     До этого на странице была только прикидка по hit_rate, и 598 подходящих
+     выглядели как 598 заказчиков — хотя верх списка оказался однодневками. */
+  const sp1 = el('div', 'split');
+  const lv = S.live || {n: 0, what: ''};
+  sp1.append(el('div', 'mini',
+    `<div class="v" style="color:${lv.n ? 'var(--good)' : 'var(--warn)'}">${lv.n || '—'}</div>
+     <div class="k">${lv.n ? 'проверено и живых' : 'проверок авторов нет'}</div>
+     <div class="n">${lv.what || ''}</div>`));
+  sp1.append(el('div', 'mini', `<div class="v">${fmt(q.needs_reddit)}</div>
+    <div class="k">ждут Reddit</div>
+    <div class="n">сессия есть до 05.04.2027; упирается в кредиты брокера</div>`));
+  work.append(sp1);
   app.append(work);
 
   /* ── 2. ЧЕМ ДОСТАВЛЯЕМ ─ поднято по просьбе: это решает, что делать ──── */
@@ -242,7 +254,7 @@ function render(d){
   det2.append(el('summary', null, `Машинный отсев: как из 10 тысяч получилось ${fmt(q.total)}`));
   const fc = el('div', 'card');
   fc.style.margin = '6px 0 0';
-  fc.append(bars(['raw','seen','base'].map(k => ({
+  fc.append(bars(['raw','seen','base','live'].map(k => ({
     label: S[k].name, n: S[k].n, tip: S[k].what + ' · ' + S[k].src,
     sub: S[k].from_prev == null ? '' : S[k].from_prev + '% от прошлого'
   })), {h:26, labelW:235}));
