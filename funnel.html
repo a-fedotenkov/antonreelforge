@@ -149,14 +149,21 @@ function render(d){
   const work = el('div', 'card');
   work.style.borderColor = 'var(--series)';
   const hero = el('div', 'hero');
+  /* 🔴 06.10: сверху ФАКТ, а не прогноз. Антон: «я ничего не понимаю в этих
+     числах воронки, опять какие-то сотни заявок». Сотни — это машинный шум
+     по пути к заявке; решения он принимает по трём числам: кому написать,
+     кто ещё не ответил, сколько сдано. Прогноз по hit_rate убран совсем:
+     он выглядел как число заказчиков, которых нет. */
+  const waiting = d.touches.filter(t => t.stage === 'отправлено' && !t.reply).length;
   hero.append(el('div', null,
-    `<div class="big">${q.bands.hot.money}</div>
-     <div class="sub">обработать</div>`));
+    `<div class="big">${waiting}</div>
+     <div class="sub">ждут ответа</div>`));
   hero.append(el('div', 'cap',
-    `<h2>Свежие заявки с названной ценой</h2>
-     Заказчик написал бюджет и ещё набирает. Из них нашими обычно
-     оказываются около ${Math.round(q.hit_rate*100)}% — ждём примерно
-     <b>${q.expect_live}</b> живых. Сегодня разобрано ${q.read_today}.`));
+    `<h2>Всего написано ${S.sent.n} из ${fmt(S.raw.n)} просмотренных постов</h2>
+     Это не «мало отправили», а честный выход рынка: заявок с живым
+     заказчиком и внятной ценой — единицы в день, остальное самопиар
+     монтажёров, аккаунты-однодневки с огромным чеком и посредники за $40.
+     Ответов пока ${S.replied.n}, сдано роликов ${S.delivered.n}.`));
   work.append(hero);
   const sp0 = el('div', 'split');
   sp0.append(el('div', 'mini', `<div class="v" style="color:var(--good)">${q.nonreddit}</div>
@@ -251,7 +258,8 @@ function render(d){
   app.append(det);
 
   const det2 = el('details');
-  det2.append(el('summary', null, `Машинный отсев: как из 10 тысяч получилось ${fmt(q.total)}`));
+  det2.append(el('summary', null,
+    `Машинный отсев: ${fmt(S.raw.n)} постов → ${fmt(S.base.n)} похожих на заявку → ${S.sent.n} написанных`));
   const fc = el('div', 'card');
   fc.style.margin = '6px 0 0';
   fc.append(bars(['raw','seen','base','live'].map(k => ({
