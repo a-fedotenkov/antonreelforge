@@ -9,39 +9,42 @@
   :root{
     --plane:#0d0d0d; --surface:#1a1a19; --ink:#fff; --ink2:#c3c2b7; --muted:#898781;
     --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,.10);
-    --series:#3987e5; --series-dim:#1c5cab;
+    --series:#3987e5; --dim:#1c5cab;
     --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--plane);color:var(--ink);
-       font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;
-       -webkit-font-smoothing:antialiased}
-  .wrap{max-width:1040px;margin:0 auto;padding:28px 20px 80px}
-  h1{font-size:23px;margin:0 0 4px;letter-spacing:-.2px}
-  h2{font-size:15px;margin:0 0 2px;letter-spacing:-.1px}
+       font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:26px 20px 70px}
+  h1{font-size:22px;margin:0 0 3px;letter-spacing:-.2px}
+  h2{font-size:15px;margin:0 0 3px}
   .sub{color:var(--muted);font-size:13px;margin:0}
-  .card{background:var(--surface);border:1px solid var(--ring);border-radius:14px;
-        padding:20px;margin:16px 0}
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
-  .tile{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:16px 18px}
-  .tile .v{font-size:30px;font-weight:650;letter-spacing:-1px;line-height:1.1}
-  .tile .k{color:var(--ink2);font-size:13px;margin-top:2px}
-  .tile .n{color:var(--muted);font-size:12px;margin-top:6px}
-  .row{display:flex;align-items:baseline;gap:10px}
+  .card{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:18px;margin:14px 0}
+  .hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+  .hero{display:flex;gap:26px;align-items:flex-end;flex-wrap:wrap;margin:2px 0 14px}
+  .hero .big{font-size:58px;font-weight:650;letter-spacing:-2.5px;line-height:.95}
+  .hero .cap{color:var(--ink2);font-size:14px;max-width:330px}
+  .split{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+  .mini{background:#121211;border:1px solid var(--ring);border-radius:11px;padding:13px 15px}
+  .mini .v{font-size:26px;font-weight:600;letter-spacing:-.8px}
+  .mini .k{color:var(--ink2);font-size:13px;margin-top:1px}
+  .mini .n{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.4}
   table{width:100%;border-collapse:collapse;font-size:13.5px}
   th{text-align:left;color:var(--muted);font-weight:500;padding:7px 10px 7px 0;
      border-bottom:1px solid var(--axis);font-size:12.5px}
   td{padding:9px 10px 9px 0;border-bottom:1px solid var(--grid);vertical-align:top}
-  td.num{font-variant-numeric:tabular-nums;text-align:right;padding-right:14px}
+  tr:last-child td{border-bottom:0}
   .pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap}
   .dot{width:8px;height:8px;border-radius:50%;flex:none}
-  .muted{color:var(--muted)}
-  .ink2{color:var(--ink2)}
+  .muted{color:var(--muted)} .ink2{color:var(--ink2)}
   svg{display:block;width:100%;overflow:visible}
+  details{margin:14px 0}
+  summary{cursor:pointer;color:var(--ink2);font-size:14px;padding:6px 0}
+  summary::marker{color:var(--muted)}
   .tip{position:fixed;pointer-events:none;background:#000;border:1px solid var(--ring);
        border-radius:8px;padding:7px 10px;font-size:12.5px;line-height:1.45;opacity:0;
-       transition:opacity .09s;max-width:290px;z-index:9;box-shadow:0 6px 24px rgba(0,0,0,.5)}
-  .gate{max-width:380px;margin:16vh auto;text-align:left}
+       transition:opacity .09s;max-width:300px;z-index:9;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+  .gate{max-width:370px;margin:16vh auto}
   input{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--axis);
         background:var(--surface);color:var(--ink);font-size:15px}
   button{margin-top:10px;width:100%;padding:11px;border-radius:10px;border:0;
@@ -49,17 +52,16 @@
   button.ghost{background:transparent;color:var(--muted);border:1px solid var(--axis);
                width:auto;padding:6px 12px;font-size:12.5px;font-weight:400;margin:0}
   .err{color:var(--crit);font-size:13px;margin-top:9px;min-height:18px}
-  .foot{color:var(--muted);font-size:12.5px;margin-top:10px}
+  .foot{color:var(--muted);font-size:12.5px;margin:8px 0 0;padding-left:18px}
   .foot li{margin:4px 0}
-  .hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-  @media(max-width:560px){.hide-s{display:none}}
+  @media(max-width:580px){.hide-s{display:none}.hero .big{font-size:46px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div id="gate" class="gate">
     <h1>Воронка edit-service</h1>
-    <p class="sub" style="margin:6px 0 16px">Данные на этой странице зашифрованы. Нужен пароль.</p>
+    <p class="sub" style="margin:6px 0 16px">Данные зашифрованы. Нужен пароль.</p>
     <input id="pw" type="password" autocomplete="current-password" placeholder="пароль" autofocus>
     <button id="go">Открыть</button>
     <div class="err" id="err"></div>
@@ -69,10 +71,13 @@
 <div class="tip" id="tip"></div>
 <script>
 const B = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
-const fmt = n => n.toLocaleString('ru-RU').replace(/,/g,' ');
+const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const plural = (n, a, b, c) => { const m = n % 100, k = n % 10;
+  return m > 10 && m < 20 ? c : k === 1 ? a : k >= 2 && k <= 4 ? b : c; };
+const daysAgo = iso => Math.floor((Date.now() - new Date(iso)) / 864e5);
 
 async function unlock(pw){
-  const blob = await (await fetch('funnel-data.json?v='+Date.now())).json();
+  const blob = await (await fetch('funnel-data.json?v=' + Date.now())).json();
   const key = await crypto.subtle.deriveKey(
     {name:'PBKDF2', salt:B(blob.salt), iterations:blob.iter, hash:'SHA-256'},
     await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']),
@@ -83,69 +88,13 @@ async function unlock(pw){
 
 const tip = document.getElementById('tip');
 function hover(el, html){
-  el.addEventListener('pointerenter', e => { tip.innerHTML = html; tip.style.opacity = 1; });
+  el.addEventListener('pointerenter', () => { tip.innerHTML = html; tip.style.opacity = 1; });
   el.addEventListener('pointermove', e => {
-    tip.style.left = Math.min(e.clientX + 14, innerWidth - 300) + 'px';
+    tip.style.left = Math.min(e.clientX + 14, innerWidth - 310) + 'px';
     tip.style.top = (e.clientY + 16) + 'px';
   });
   el.addEventListener('pointerleave', () => tip.style.opacity = 0);
 }
-
-/* Горизонтальные бары: одна серия, один цвет. Порядок несёт смысл, не цвет. */
-function bars(rows, opts){
-  const o = Object.assign({h:30, gap:9, labelW:210, numW:74, color:'var(--series)'}, opts||{});
-  const max = Math.max(...rows.map(r => r.n), 1);
-  const H = rows.length * (o.h + o.gap);
-  const svgW = 1000, plotX = o.labelW, plotW = svgW - o.labelW - o.numW;
-  let s = `<svg viewBox="0 0 ${svgW} ${H}" role="img" preserveAspectRatio="none" style="height:${H}px">`;
-  rows.forEach((r, i) => {
-    const y = i * (o.h + o.gap), w = Math.max(2, r.n / max * plotW);
-    const col = r.color || o.color;
-    s += `<text x="0" y="${y + o.h/2 + 5}" fill="var(--ink2)" font-size="13.5">${r.label}</text>`;
-    s += `<rect data-i="${i}" x="${plotX}" y="${y}" width="${w}" height="${o.h}" rx="4" fill="${col}"></rect>`;
-    s += `<text x="${plotX + w + 10}" y="${y + o.h/2 + 5}" fill="var(--ink)" font-size="13.5"
-            font-variant-numeric="tabular-nums">${fmt(r.n)}${r.suffix||''}</text>`;
-    if (r.sub) s += `<text x="${plotX + w + 10}" y="${y + o.h/2 + 5}" dx="${String(r.n).length*9+34}"
-            fill="var(--muted)" font-size="12">${r.sub}</text>`;
-  });
-  s += '</svg>';
-  const box = document.createElement('div');
-  box.innerHTML = s;
-  box.querySelectorAll('rect[data-i]').forEach(rect => {
-    const r = rows[+rect.dataset.i];
-    hover(rect, `<b>${r.label}</b> — ${fmt(r.n)}${r.suffix||''}<br><span style="color:#898781">${r.tip||''}</span>`);
-  });
-  return box;
-}
-
-/* Дни: вертикальные бары. Пропуск = день без находок, помечен явно. */
-function daybars(days){
-  const max = Math.max(...days.map(d => d.n), 1), H = 120, W = 1000;
-  const bw = Math.max(6, W / days.length - 6);
-  let s = `<svg viewBox="0 0 ${W} ${H+26}" style="height:${H+26}px" preserveAspectRatio="none">`;
-  s += `<line x1="0" y1="${H}" x2="${W}" y2="${H}" stroke="var(--axis)" stroke-width="1"/>`;
-  days.forEach((d, i) => {
-    const x = i * (W / days.length), h = d.n ? Math.max(3, d.n / max * (H - 14)) : 0;
-    if (d.n) {
-      s += `<rect data-i="${i}" x="${x}" y="${H - h}" width="${bw}" height="${h}" rx="3"
-             fill="${d.dead ? 'var(--crit)' : 'var(--series)'}"></rect>`;
-    } else {
-      s += `<rect data-i="${i}" x="${x}" y="${H-4}" width="${bw}" height="4" rx="2" fill="var(--crit)"></rect>`;
-    }
-    if (i % 2 === 0 || days.length < 12)
-      s += `<text x="${x + bw/2}" y="${H+18}" fill="var(--muted)" font-size="11"
-              text-anchor="middle">${d.day.slice(8)}.${d.day.slice(5,7)}</text>`;
-  });
-  s += '</svg>';
-  const box = document.createElement('div');
-  box.innerHTML = s;
-  box.querySelectorAll('rect[data-i]').forEach(rect => {
-    const d = days[+rect.dataset.i];
-    hover(rect, `<b>${d.day}</b><br>${d.n ? fmt(d.n) + ' находок' : 'ничего — радар не работал'}`);
-  });
-  return box;
-}
-
 function el(tag, cls, html){
   const n = document.createElement(tag);
   if (cls) n.className = cls;
@@ -153,139 +102,160 @@ function el(tag, cls, html){
   return n;
 }
 
+/* Одна серия, один цвет: порядок строк уже несёт смысл, цвет дублировал бы его.
+   Акцент цветом только там, где состояние требует внимания. */
+function bars(rows, o){
+  o = Object.assign({h:30, gap:9, labelW:250, numW:120}, o || {});
+  const max = Math.max(...rows.map(r => r.n), 1), W = 1000;
+  const H = rows.length * (o.h + o.gap), plotW = W - o.labelW - o.numW;
+  let s = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="height:${H}px" role="img">`;
+  rows.forEach((r, i) => {
+    const y = i * (o.h + o.gap), w = Math.max(2, r.n / max * plotW);
+    s += `<text x="0" y="${y + o.h/2 + 5}" fill="var(--ink2)" font-size="13.5">${r.label}</text>`;
+    s += `<rect data-i="${i}" x="${o.labelW}" y="${y}" width="${w}" height="${o.h}" rx="4"
+            fill="${r.color || 'var(--series)'}"></rect>`;
+    s += `<text x="${o.labelW + w + 10}" y="${y + o.h/2 + 5}" fill="var(--ink)" font-size="13.5"
+            font-variant-numeric="tabular-nums">${fmt(r.n)}</text>`;
+    if (r.sub) s += `<text x="${o.labelW + w + 10 + String(r.n).length * 9 + 14}"
+            y="${y + o.h/2 + 5}" fill="var(--muted)" font-size="12">${r.sub}</text>`;
+  });
+  s += '</svg>';
+  const box = el('div');
+  box.innerHTML = s;
+  box.querySelectorAll('rect[data-i]').forEach(rect => {
+    const r = rows[+rect.dataset.i];
+    hover(rect, `<b>${r.label}</b> — ${fmt(r.n)}<br><span style="color:#898781">${r.tip || ''}</span>`);
+  });
+  return box;
+}
+
 function render(d){
   const app = document.getElementById('app');
   app.hidden = false;
   document.getElementById('gate').remove();
-  const S = {};
-  d.stages.forEach(s => S[s.key] = s);
+  const S = {}; d.stages.forEach(s => S[s.key] = s);
+  const q = d.queue, bands = q.bands, W = d.work;
 
   const hdr = el('div', 'hdr');
   hdr.append(el('div', null, `<h1>Воронка edit-service</h1>
-    <p class="sub">Собрано ${d.generated_at.replace('T',' ').slice(0,16)} UTC ·
-    данные завода ${d.factory_freshness}${d.factory_at ? ' (' + d.factory_at.replace('T',' ').slice(0,16) + ')' : ''}</p>`));
+    <p class="sub">Сверено ${d.generated_at.replace('T',' ').slice(0,16)} UTC ·
+    последний скан рынка ${q.last_scan || '—'} · данные завода ${d.factory_freshness}</p>`));
   const out = el('button', 'ghost', 'Закрыть');
   out.onclick = () => { sessionStorage.removeItem('fpw'); location.reload(); };
   hdr.append(out);
   app.append(hdr);
 
-  /* Крупные числа: четыре, что отвечают на «где мы» одним взглядом. */
-  const tiles = el('div', 'tiles');
-  [['base','в базе заявок','кто-то ищет монтёра прямо сейчас','var(--ink)'],
-   ['sent','отправлено','ушло адресату','var(--series)'],
-   ['replied','ответили','живых ответов от заказчиков','var(--crit)'],
-   ['delivered','сдано роликов','работа у клиента','var(--crit)']
-  ].forEach(([k, name, note, col]) => {
-    tiles.append(el('div','tile',
-      `<div class="v" style="color:${col}">${fmt(S[k].n)}</div>
-       <div class="k">${name}</div><div class="n">${note}</div>`));
-  });
-  app.append(tiles);
+  /* ── 1. СКОЛЬКО ОБРАБОТАТЬ ─────────────────────────────────────────────
+     Главный вопрос. Рабочий объём — это НЕ вся база: заявка на монтаж живёт
+     считанные дни, и считать стоит только свежие с названной ценой. */
+  const work = el('div', 'card');
+  work.style.borderColor = 'var(--series)';
+  work.append(el('div', null, `<h2>Сколько ещё обработать</h2>
+    <p class="sub">Свежие заявки, где заказчик сам назвал цену. Остальное — хвост.</p>`));
+  const hero = el('div', 'hero');
+  hero.append(el('div', null,
+    `<div class="big">${bands.hot.money}</div>
+     <div class="sub">${plural(bands.hot.money,'заявка','заявки','заявок')} на сегодня</div>`));
+  hero.append(el('div', 'cap',
+    `Это посты не старше трёх дней с названным бюджетом. По прошлым разборам
+     нашими оказываются около ${Math.round(q.hit_rate*100)}% — то есть ждём
+     примерно <b>${q.expect_live}</b> живых. Сегодня уже разобрано ${q.read_today}.`));
+  work.append(hero);
+  work.append(bars([
+    {label:'0-3 дня, цена названа', n:bands.hot.money, color:'var(--series)',
+     tip:'читать сегодня: автор ещё набирает', sub:'читать сегодня'},
+    {label:'0-3 дня, без цены', n:bands.hot.n - bands.hot.money, color:'var(--dim)',
+     tip:'живые, но цену придётся выяснять в переписке'},
+    {label:'4-7 дней', n:bands.fresh.n, color:'var(--dim)',
+     tip:'ещё можно успеть, часть уже набрала исполнителей', sub:bands.fresh.money + ' с ценой'},
+    {label:'8-14 дней', n:bands.stale.n, color:'#2c2c2a',
+     tip:'почти всегда мёртвое: набор закрыт. Брать только точечно', sub:'хвост'},
+  ], {h:28, labelW:235}));
+  app.append(work);
 
-  const blocked = el('div', 'card');
-  blocked.style.borderColor = 'var(--warn)';
-  blocked.innerHTML = `<div class="row"><span class="pill">
-      <span class="dot" style="background:var(--warn)"></span><b>Узкое место</b></span></div>
-    <p style="margin:8px 0 0"><b>${d.blocked.n} текста написаны и лежат неотправленными.</b>
-    Причина: ${d.blocked.why}.</p>
-    <p class="sub" style="margin:6px 0 0">Цена вопроса: ${d.blocked.money}.</p>`;
-  app.append(blocked);
+  /* ── 2. ЧТО УЖЕ ЕСТЬ ──────────────────────────────────────────────────── */
+  const have = el('div', 'card');
+  have.append(el('div', null, `<h2>Что уже есть</h2>
+    <p class="sub">Касания, которые сделаны. Это и есть весь текущий результат.</p>`));
+  const sp = el('div', 'split');
+  const oldest = W.sent.length ? Math.max(...W.sent.map(x => daysAgo(x.date))) : 0;
+  sp.append(el('div', 'mini', `<div class="v" style="color:var(--series)">${W.sent.length}</div>
+    <div class="k">отправлено</div>
+    <div class="n">ждём ответа, самое старое — ${oldest} ${plural(oldest,'день','дня','дней')}</div>`));
+  sp.append(el('div', 'mini', `<div class="v" style="color:var(--warn)">${W.written.length}</div>
+    <div class="k">написано, не ушло</div>
+    <div class="n">${d.blocked.why}</div>`));
+  sp.append(el('div', 'mini', `<div class="v" style="color:var(--crit)">${W.replied.length}</div>
+    <div class="k">ответов от заказчиков</div>
+    <div class="n">ни одного: восемь касаний — слишком мало для вывода</div>`));
+  sp.append(el('div', 'mini', `<div class="v" style="color:var(--crit)">${S.delivered.n}</div>
+    <div class="k">сдано роликов</div>
+    <div class="n">первый сданный ролик = входной билет на рынок</div>`));
+  have.append(sp);
+  app.append(have);
 
-  /* Два масштаба вместо лог-шкалы: 10 000 и 15 на одной оси превратили бы
-     хвост в нули. Поэтому «рынок» и «работа руками» — отдельные панели. */
-  const m = el('div', 'card');
-  m.append(el('div', null, `<h2>Рынок: что отсеялось само</h2>
-    <p class="sub">Машинные этапы. Масштаб — тысячи.</p>`));
-  m.append(bars(['raw','seen','base'].map(k => ({
-    label: S[k].name, n: S[k].n, tip: S[k].what + ' · ' + S[k].src,
-    sub: S[k].from_prev == null ? '' : S[k].from_prev + '% от прошлого'
-  })), {h:34}));
-  app.append(m);
-
-  const h = el('div', 'card');
-  h.append(el('div', null, `<h2>Работа руками: где рвётся</h2>
-    <p class="sub">Масштаб — десятки. Тот же ряд, продолжение.</p>`));
-  h.append(bars(['read','sent','replied','delivered'].map(k => ({
-    label: S[k].name, n: S[k].n, tip: S[k].what + ' · ' + S[k].src,
-    color: S[k].n === 0 ? 'var(--crit)' : (k === 'sent' ? 'var(--series)' : 'var(--series-dim)'),
-    sub: S[k].from_prev == null ? '' : S[k].from_prev + '% от прошлого'
-  })), {h:34}));
-  app.append(h);
-
-  const src = el('div', 'card');
-  src.append(el('div', null, `<h2>Откуда заявки</h2>
-    <p class="sub">Сабреддиты в базе: кто кормит воронку на самом деле.</p>`));
-  src.append(bars(d.sources.subreddits.map(([name, n]) => ({
-    label: 'r/' + name, n, tip: 'заявок в базе из этого сабреддита'
-  })), {h:22, gap:7, labelW:230}));
-  app.append(src);
-
-  const ch = el('div', 'card');
-  const chans = d.sources.touch_channels.map(([name, n]) => ({
-    label: name, n, tip: 'касаний этим каналом'}));
-  ch.append(el('div', null, `<h2>Чем касались</h2>
-    <p class="sub">Reddit требует аккаунт, почта и формы — нет. Отсюда и перекос.</p>`));
-  ch.append(bars(chans, {h:24, gap:8, labelW:140}));
-  app.append(ch);
-
-  if (d.days && d.days.length) {
-    const dd = el('div', 'card');
-    const days = d.days.filter(([day]) => day && day !== '?')
-                       .map(([day, n]) => ({day, n}));
-    /* Заполняем календарные дыры: день без бара = радар молчал. */
-    const full = [];
-    if (days.length) {
-      const start = new Date(days[0].day), end = new Date(days[days.length-1].day);
-      for (let t = start; t <= end; t.setDate(t.getDate()+1)) {
-        const key = t.toISOString().slice(0,10);
-        const hit = days.find(x => x.day === key);
-        full.push(hit || {day:key, n:0});
-      }
-    }
-    dd.append(el('div', null, `<h2>Поток находок по дням</h2>
-      <p class="sub">Красным — дни, когда радар молчал: три дня он был мёртв, пока не переехал на Unblocker.</p>`));
-    dd.append(daybars(full));
-    app.append(dd);
-  }
-
-  /* Таблица касаний: статус иконкой + подписью, не цветом одним. */
+  /* ── 3. ТАБЛИЦА КАСАНИЙ ───────────────────────────────────────────────── */
   const t = el('div', 'card');
   t.append(el('div', null, `<h2>Все касания по одному</h2>
-    <p class="sub">${d.touches.length} заявок разобрано вручную. Деньги — то, что назвал сам заказчик.</p>`));
+    <p class="sub">Деньги — то, что назвал сам заказчик, не наша оценка.</p>`));
   const colour = s => s === 'отправлено' ? 'var(--series)' : 'var(--warn)';
   let rows = '';
-  d.touches.slice().reverse().forEach(x => {
+  d.touches.slice().sort((a, b) => b.date.localeCompare(a.date)).forEach(x => {
+    const wait = x.stage === 'отправлено' ? daysAgo(x.date) : null;
     rows += `<tr>
       <td class="muted" style="white-space:nowrap">${x.date.slice(8)}.${x.date.slice(5,7)}</td>
       <td><b>${x.who}</b><div class="muted">${x.what}</div></td>
-      <td class="ink2 hide-s">${x.money || '—'}</td>
+      <td class="ink2">${x.money || '—'}</td>
       <td class="muted hide-s">${x.channel}</td>
-      <td><span class="pill"><span class="dot" style="background:${colour(x.stage)}"></span>
-        ${x.stage}</span><div class="muted">${x.by ? 'кем: ' + x.by : 'ждёт доставки'}</div></td>
-      <td class="muted hide-s" style="max-width:260px">${x.note || ''}</td></tr>`;
+      <td><span class="pill"><span class="dot" style="background:${colour(x.stage)}"></span>${x.stage}</span>
+          <div class="muted">${x.stage === 'отправлено'
+            ? 'тишина ' + wait + ' ' + plural(wait,'день','дня','дней') + ' · ' + x.by
+            : 'ждёт доставки'}</div></td>
+      <td class="muted hide-s" style="max-width:250px">${x.note || ''}</td></tr>`;
   });
-  t.append(el('table', null, `<thead><tr><th>дата</th><th>кто</th><th class="hide-s">деньги</th>
+  t.append(el('table', null, `<thead><tr><th>дата</th><th>кто</th><th>деньги</th>
     <th class="hide-s">канал</th><th>стадия</th><th class="hide-s">примечание</th></tr></thead>
     <tbody>${rows}</tbody>`));
   app.append(t);
 
-  const f = el('div', 'card');
-  f.append(el('div', null, `<h2>Что чем является</h2>`));
-  f.append(el('ul', 'foot', d.notes.map(n => `<li>${n}</li>`).join('')));
-  app.append(f);
+  /* ── 4. КАНАЛЫ: ответ на «а остальные каналы?» ─────────────────────────── */
+  const ch = el('div', 'card');
+  ch.append(el('div', null, `<h2>Каналы: чем ищем и чем отвечаем</h2>
+    <p class="sub">Вся база — Reddit, потому что радар читает только его RSS.
+    Биржи (Upwork, Workana, LinkedIn, X) сканируются руками и редко.</p>`));
+  ch.append(bars([
+    {label:'Reddit-радар, автоматом', n:q.total, color:'var(--series)',
+     tip:'крутится каждые 30 минут на заводе', sub:'каждые 30 мин'},
+    {label:'Биржи и поиск, руками', n:S.base.n - q.total, color:'var(--dim)',
+     tip:'Upwork, Workana, LinkedIn, X — запускаю вручную, потока нет', sub:'потока нет'},
+    {label:'Доступны без Reddit-аккаунта', n:q.nonreddit, color:'var(--good)',
+     tip:'в заявке указана почта, Discord или форма — эти я могу отработать сама'},
+  ], {h:28, labelW:255}));
+  ch.append(el('p', 'sub', `Доставка: почта и формы работают (так ушло 6 из 8),
+    Reddit ждёт сессию из твоего браузера. ${q.nonreddit} ${plural(q.nonreddit,'заявка','заявки','заявок')}
+    в очереди можно отработать прямо сейчас, без Reddit.`));
+  app.append(ch);
+
+  /* ── 5. МАШИННАЯ ВОРОНКА — вниз, свёрнутой ────────────────────────────── */
+  const det = el('details');
+  det.append(el('summary', null, 'Откуда взялись эти 552 — машинный отсев, 10 тысяч → 552'));
+  const fc = el('div', 'card');
+  fc.style.margin = '6px 0 0';
+  fc.append(bars(['raw','seen','base'].map(k => ({
+    label: S[k].name, n: S[k].n, tip: S[k].what + ' · ' + S[k].src,
+    sub: S[k].from_prev == null ? '' : S[k].from_prev + '% от прошлого'
+  })), {h:26, labelW:235}));
+  fc.append(el('ul', 'foot', d.notes.map(n => `<li>${n}</li>`).join('')));
+  det.append(fc);
+  app.append(det);
 }
 
 async function go(){
   const pw = document.getElementById('pw').value;
   const err = document.getElementById('err');
   err.textContent = 'расшифровываю…';
-  try {
-    const d = await unlock(pw);
-    sessionStorage.setItem('fpw', pw);
-    render(d);
-  } catch (e) {
-    err.textContent = 'пароль не подошёл';
-  }
+  try { const d = await unlock(pw); sessionStorage.setItem('fpw', pw); render(d); }
+  catch (e) { err.textContent = 'пароль не подошёл'; }
 }
 document.getElementById('go').onclick = go;
 document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
