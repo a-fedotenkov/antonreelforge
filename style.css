@@ -69,19 +69,44 @@ nav a {
 }
 nav a:hover { color: var(--ink); }
 
+/* Переключатель языка. 🔴 Первая версия сливалась с меню: тот же шрифт,
+   тот же цвет, тот же ряд — Антон 08.10: «не видно переключателя, если
+   не искать». Теперь это кнопка с рамкой и собственным фоном, отделённая
+   от навигации зазором: читается как управляющий элемент, а не как ещё
+   один пункт меню.
+   Флаги сознательно НЕ используем: у португальского их два (Бразилия
+   и Португалия, и бразильцу чужой флаг неприятен), у английского тоже,
+   а флаг вообще обозначает страну, а не язык. */
 .lang-switch {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
+  margin-left: 22px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card, #fff);
   font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.08em;
-  color: var(--ink-soft);
+  letter-spacing: 0.06em;
+  line-height: 1;
 }
-.lang-switch .lang-current { color: var(--ink); font-weight: 700; }
-.lang-switch a { color: var(--ink-soft); text-decoration: none; }
-.lang-switch a:hover { color: var(--ink); }
-.lang-switch .lang-sep { opacity: 0.5; }
+.lang-switch .lang-current,
+.lang-switch a {
+  padding: 5px 10px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.lang-switch .lang-current {
+  color: #fff;
+  background: var(--accent);
+  font-weight: 700;
+}
+.lang-switch a { color: var(--ink-soft); }
+.lang-switch a:hover { color: var(--ink); background: rgba(0, 0, 0, 0.06); }
+/* Разделитель в кнопочном виде не нужен — его роль играет сама заливка. */
+.lang-switch .lang-sep { display: none; }
 
 section { padding: 8vw 6vw; }
 
