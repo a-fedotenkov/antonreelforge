@@ -730,3 +730,7 @@ footer { display: flex; justify-content: space-between; align-items: center; gap
 footer a { color: var(--ink-soft); }
 
 .brand-accent { opacity: .62; font-weight: 400; }
+
+/* Пока фотографии нет, блок об авторе идёт одной колонкой: иначе текст
+   жмётся вправо, а слева зияет пустая треть. Убрать вместе с возвратом фото. */
+.author--no-photo { grid-template-columns: 1fr; }
