@@ -51,6 +51,13 @@ header {
   margin-top: 2px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
 nav { display: flex; gap: 28px; }
 nav a {
   color: var(--ink-soft);
@@ -61,6 +68,20 @@ nav a {
   text-transform: uppercase;
 }
 nav a:hover { color: var(--ink); }
+
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+.lang-switch .lang-current { color: var(--ink); font-weight: 700; }
+.lang-switch a { color: var(--ink-soft); text-decoration: none; }
+.lang-switch a:hover { color: var(--ink); }
+.lang-switch .lang-sep { opacity: 0.5; }
 
 section { padding: 8vw 6vw; }
 
@@ -732,5 +753,6 @@ footer a { color: var(--ink-soft); }
 .brand-accent { opacity: .62; font-weight: 400; }
 
 /* Пока фотографии нет, блок об авторе идёт одной колонкой: иначе текст
-   жмётся вправо, а слева зияет пустая треть. Убрать вместе с возвратом фото. */
+   жмётся в правую часть, а слева зияет пустая треть. Убрать вместе
+   с возвратом фото. */
 .author--no-photo { grid-template-columns: 1fr; }
