@@ -162,6 +162,22 @@ section { padding: 8vw 6vw; }
 }
 .btn:hover { background: var(--accent); }
 
+/* Две кнопки на первом экране (09.10.2026): первая зовёт к действию,
+   вторая ведёт к доказательствам. Раньше ссылка была одна — «посмотри,
+   как это собрано», то есть единственный путь вёл в описание процесса,
+   а не к заказу. */
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+.btn-ghost:hover { background: var(--ink); color: var(--bg); }
+
+/* Технические метрики переехали с первого экрана в блок доказательств:
+   там они подтверждают качество, а не продают вместо обещания. */
+.proof .spec-strip { margin: 26px 0 0; }
+
 .line {
   padding: 0 6vw 6vw;
   overflow-x: auto;
